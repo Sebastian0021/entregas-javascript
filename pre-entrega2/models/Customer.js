@@ -9,4 +9,9 @@ export class Customer {
         this.purchases = purchases; // Número de compras del cliente
         this.points = points; // Puntos de fidelidad del cliente
     }
+
+    // Método para setear el número de compras de un cliente
+    setPurchases(numOfPurchases) {
+        this.purchases = numOfPurchases;
+    }
 }
