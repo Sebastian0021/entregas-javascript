@@ -1,0 +1,38 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.main, .form-customer{
+    display: flex;
+    flex-direction: column;
+}
+
+.container{
+    display: flex;
+    width: 100%;
+    padding: 0 1em;
+}
+
+.form-customer{
+    width: 100%;
+    /* background-color: #E7E4E4; */
+}
+
+.form-customer--input, .form-customer--btn{
+    padding: 1em;
+    width: 100%;
+    margin: .5em auto;
+}
+
+.customers{
+    width: 100%;
+    /* background-color: #CECACA; */
+}
+
+@media screen and (min-width: 600px) {
+    .main{
+        flex-direction: row;
+    }
+  }

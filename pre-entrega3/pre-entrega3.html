@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style/style.css">
+  <title>Tercera entrega</title>
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="../index.html">Volver al home</a>
+    </nav>
+  </header>
+  <main class="main">
+    
+
+      <!-- <form action="" id="customer-form">
+        <input class='form--input' type="text" id="name" name="name" placeholder="Nombre" required pattern="" title="Nombre inválido. Intente nuevamente con solo letras y espacios.">
+        <input class='form--input' type="text" id="username" name="username" placeholder="Usuario" required>
+        <input class='form--input' type="number" id="phone" name="phone" placeholder="Teléfono" maxlength="10" required>
+        <input class='form--input' type="text" id="street" name="street" placeholder="Calle" required>
+        <input class='form--input' type="text" id="city" name="city" placeholder="Ciudad" required>
+        <input class='form--input' type="text" id="province" name="province" placeholder="Provincia" required>
+        <button>Agregar</button>
+      </form> -->
+      <div class="container">
+        <form action="" class="form-customer" id="customer-form">
+          <input class="form-customer--input" type="text" id="name" name="name" placeholder="Nombre" required pattern="^[A-Za-z\sñ]+$" title="Nombre inválido. Intente nuevamente con solo letras y espacios.">
+          <input class="form-customer--input" type="text" id="username" name="username" placeholder="Usuario" required>
+          <input class="form-customer--input" type="number" id="phone" name="phone" placeholder="Teléfono" min="1000000000" max="9999999999" pattern="[0-9]{10}" title="La calle solo puede contener letras y números. Intente nuevamente." required>
+          <input class="form-customer--input" type="text" id="street" name="street" placeholder="Calle" required pattern="^[A-Za-z0-9\s]+$" title="La calle solo puede contener letras y números. Intente nuevamente.">
+          <input class="form-customer--input" type="text" id="city" name="city" placeholder="Ciudad" required pattern="^[A-Za-z\s]+$" title="La ciudad solo puede contener letras. Intente nuevamente.">
+          <input class="form-customer--input" type="text" id="province" name="province" placeholder="Provincia" required pattern="^[A-Za-z\s]+$" title="La provincia solo puede contener letras. Intente nuevamente.">
+          <button class="form-customer--btn">Agregar</button>
+        </form>
+      </div>
+       
+      <div class="container">
+        <section class="customers" id="customers">
+          <form action="">
+            <input class="form-customer--input" type="text" id="filter" placeholder="Buscar cliente">
+          </form>
+          <br/>
+          <div id="customers-container"></div>
+         
+          <!-- <div>
+            <p><strong>Nombre</strong>: <input type="text" id="name" name="name" placeholder="Nombre" required pattern="^[A-Za-z\sñ]+$" title="Nombre inválido. Intente nuevamente con solo letras y espacios."></p>
+            <p><strong>Usuario</strong>: <input type="text" id="username" name="username" placeholder="Usuario" required></p>
+            <p><strong>Teléfono</strong>: <input type="number" id="phone" name="phone" placeholder="Teléfono" min="1000000000" max="9999999999" pattern="[0-9]{10}" title="La calle solo puede contener letras y números. Intente nuevamente." required></p>
+            <p><strong>Calle</strong>: <input type="text" id="street" name="street" placeholder="Calle" required pattern="^[A-Za-z0-9\s]+$" title="La calle solo puede contener letras y números. Intente nuevamente."></p>
+            <p><strong>Ciudad</strong>: <input type="text" id="city" name="city" placeholder="Ciudad" required pattern="^[A-Za-z\s]+$" title="La ciudad solo puede contener letras. Intente nuevamente.">
+            <p><strong>Provincia</strong>: <input type="text" id="province" name="province" placeholder="Provincia" required pattern="^[A-Za-z\s]+$" title="La provincia solo puede contener letras. Intente nuevamente."></p>          </p>
+            <p><strong>Compras</strong>: <input type="number" name="" id=""></p>
+            <p><strong>Puntos</strong>: <input type="number" name="" id=""></p>
+            <button>Guardar</button>
+            <button>Eliminar</button>
+          </div> -->
+        
+        <!-- <div>
+          <ul>
+            <li>Nombre: <span></span></li>
+            <li>Usuario: <span></span></li>
+            <li>Teléfono: <span></span></li>
+            <li>Calle: <span></span></li>
+            <li>Ciudad: <span></span></li>
+            <li>Provincia: <span></span></li>
+            <li>Compras: <span></span></li>
+            <li>Puntos: <span></span></li>
+          </ul>
+        </div> -->
+      </section>
+    </div>
+    </main>
+    <script type="module" src="main.js"></script>
+  </body>
+</html>

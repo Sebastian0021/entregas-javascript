@@ -49,10 +49,13 @@ export function addCustomer(customersDataBase) {
 
         // Obtener y validar el nombre completo del nuevo cliente
         newCustomerData.name = getValidatedInput('Ingrese el nombre completo del cliente (solo letras y espacios):', /^[A-Za-z\s]+$/, 'Nombre inválido. Intente nuevamente con solo letras y espacios.');
+        
         // Obtener y validar el nombre de usuario del nuevo cliente
         newCustomerData.username = getValidatedInput('Ingrese el nombre de usuario del cliente (debe comenzar con "@"):', /^@.+$/, 'Nombre de usuario inválido. Debe comenzar con "@". Intente nuevamente.');
+        
         // Obtener y validar el número de teléfono del nuevo cliente
         newCustomerData.phone = getValidatedInput('Ingrese el número de teléfono del cliente (10 dígitos):', /^\d{10}$/, 'Número de teléfono inválido. Debe contener 10 dígitos. Intente nuevamente.');
+        
         // Obtener y validar la dirección del nuevo cliente
         newCustomerData.address = {
             street: getValidatedInput('Ingrese la calle donde vive el cliente:', /.+/, 'La calle no puede estar vacía. Intente nuevamente.'),
