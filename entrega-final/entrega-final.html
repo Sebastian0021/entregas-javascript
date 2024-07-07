@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style/style.css">
+  <title>Entrega final</title>
+</head>
+
+<body>
+  <header class="header">
+    <nav class="nav">
+      <a class="nav--a" href="../index.html"><i class="fa-solid fa-chevron-left"></i> Volver al home</a>
+    </nav>
+    <h1 class="header--h1">Base de datos</h1>
+  </header>
+  <main class="main">
+    <div class="container">
+      <div class="form--container">
+        <form class="form" action="">
+          <input class="form--input" type="text" placeholder="Nombre" required>
+          <input class="form--input" type="text" placeholder="Usuario" required>
+          <input class="form--input" type="number" placeholder="Teléfono" required>
+          <input class="form--input" type="text" placeholder="Calle" required>
+          <input class="form--input" type="text" placeholder="Ciudad" required>
+          <input class="form--input" type="text" placeholder="Provincia" required>
+          <button class="form--btn"><i class="fa-solid fa-plus"></i> Agregar</button>
+        </form>
+      </div>
+      <div class="customers-ui">
+        <div class="search-customer">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input id="filter" class="search-customer--input" type="text" placeholder="Buscar cliente">
+        </div>
+        <div class="customers--container" id="customers-container">
+        </div>
+      </div>
+    </div>
+  </main>
+  <script type="module" src="main.js"></script>
+  <script src="https://kit.fontawesome.com/664e17c0ca.js" crossorigin="anonymous"></script>
+</body>
+
+</html>

@@ -1,0 +1,243 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body{
+    font-family: "Poppins", sans-serif;
+    background-color: #201E1E;
+    color: #F8F0F0;
+}
+
+.main{
+    display: flex;
+}
+
+.container{
+    width: 1360px;
+    padding: 40px;
+    margin: 0 auto;
+}
+
+.header{
+    background-color: #3A3A3A;
+    height: 80px;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+.header--h1, .nav{
+    margin: auto 0;
+}
+
+.nav--a{
+    color: #F8F0F0;
+    text-decoration: none;
+    margin-left: 1em;
+}
+
+.header--h1{
+    text-align: center;
+    font-size: 22px;
+    font-weight: 500;
+}
+
+.form--container{
+    width: 600px;
+    height: 733px;
+    background-color: #3A3A3A;
+    border: solid 1px #898989;
+    border-radius: 20px;
+    padding: 51px;
+    position: fixed;
+    /* display: none; */
+}
+
+.form{
+    display: flex;
+    flex-direction: column;
+    width: 400px;
+}
+
+.form--input{
+    width: 400px;
+    height: 80px;
+    border: none;
+    border-radius: 10px;
+    background-color: #4E4E4E;
+    padding-left: 31px;
+    margin-bottom: 10px;
+    font-family: Poppins;
+    font-size: 16px;
+    font-weight: 500;
+    color:#F8F0F0;
+}
+
+.form--input:focus, 
+.search-customer:focus{
+    border: 1px solid #F8F0F0;
+    outline: none;
+}
+
+.form--btn{
+    width: 180px;
+    height: 60px;
+    border: none;
+    border-radius: 10px;
+    background-color: #4E4E4E;
+    color:#818181;
+    font-family: Poppins;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 24px;
+    text-align: center;
+    cursor: not-allowed;
+}
+
+.add{
+    background-color: #5C38FE;
+    cursor: pointer;
+    color:#F8F0F0;
+}
+
+.customers-ui{
+    margin-left: 680px;
+}
+
+.search-customer{
+    display: flex;
+    align-items: center;
+    width: 600px;
+    height: 80px;
+    border-radius: 40px;
+    border: solid 1px #898989;
+    background-color: #4E4E4E;
+    padding-left: 33px;
+    position: fixed;
+}
+
+.search-customer--input{
+    border: none;
+    width: 90%;
+    height: 100%;
+    background-color: inherit;
+    font-family: Poppins;
+    font-size: 16px;
+    font-weight: 500;
+    color: #F8F0F0;
+    padding-left: 10px;
+}
+
+.fa-magnifying-glass{
+    color: #757575;
+    font-size: 20px;
+    text-align: end;
+}
+
+.search-customer--input:focus{
+    border: none;
+    outline: none;
+}
+
+.customers--container{
+    padding-top: 160px;
+}
+
+.customer--container{
+    width: 600px;
+    height: 348px;
+    border-radius: 20px;
+    background-color: #3B3B3B;
+    border: #898989 1px solid;
+    margin-bottom: 20px;
+}
+
+.customer--div1{
+    height: 246px;
+    display: flex;
+    padding: 32px 0 0 26px;
+    border-bottom: #898989 1px solid;
+}
+
+.customer-info{
+    width: 250px;
+    height: 100%;
+    display: grid;
+    grid-template-columns: 96px 1fr;
+}
+
+.customer--img-container{
+    width: 80px;
+    height: 80px;
+    /* background-color: #F8F0F0; */
+    border-radius: 50%;
+    margin-right: 26px;
+}
+
+.customer-info-col1,
+.customer-info-col2,
+.customer-info2-col1,
+.customer-info2-col2
+{
+    display: grid;
+}
+
+.customer-info-col1,
+.customer-info-col2{
+    grid-template-rows: repeat(6,1fr);
+}
+
+.customer-info-col1,
+.customer-info2-col1{
+    font-weight: 600;
+    line-height: 24px;
+    color: #818181;
+}
+
+.customer-info-col2,
+.customer-info2-col2{
+    font-family: Poppins;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 24px;
+    text-align: left;
+}
+
+.customer--action-btn{
+    cursor: pointer;
+    color: #818181;
+    font-size: 16px;
+    font-weight: 400;
+    font-family: Poppins;
+    background: none;
+    border: none;
+    margin-right: 20px;
+}
+
+.remove:hover{
+    color: #D37373;
+}
+
+.edit:hover{
+    color: #32959B;
+}
+
+.customer--div2{
+    height: 102px;
+    padding: 21px 0;
+}
+
+.customer-info--container2{
+    margin-left: 132px;
+    height: 100%;
+}
+
+.customer-info2-col1,
+.customer-info2-col2{
+    grid-template-rows: repeat(2,1fr);
+}
