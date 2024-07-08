@@ -15,7 +15,7 @@ const customersDataBase = new CustomerDataBase();
 const customersDataStorage = getDataFromStorage('customersData')
 
 if(customersDataStorage){
-    console.log(customersDataStorage)
+    // console.log(customersDataStorage)
     customersDataBase.addCustomersFromCustomersData(customersDataStorage);
 
 }else{
@@ -24,188 +24,319 @@ if(customersDataStorage){
 
 const customersContainer = document.querySelector('#customers-container')
 
-// const customerForm = document.querySelector('#customer-form')
+
+
+const generateRandomId = () => {
+    return Math.floor(Math.random() * Date.now()).toString(16)
+};
+
+//Form
+
 // const customerInputName = document.querySelector('#name')
 // const customerInputUsername = document.querySelector('#username')
 // const customerInputPhone = document.querySelector('#phone')
 // const customerInputStreet = document.querySelector('#street')
 // const customerInputCity = document.querySelector('#city')
 // const customerInputProvince = document.querySelector('#province')
-
 // const inputs = document.querySelectorAll('.form-customer--input')
 
-const generateRandomId = () => {
-    return Math.floor(Math.random() * Date.now()).toString(16)
-};
+const customerForm = document.querySelector('#customer-form')
+const submitBtn = document.getElementById("btn-customer-form");
 
-// customerForm.addEventListener('submit', e => {
-//     e.preventDefault()
-    
-//     addCustomer()
-//     renderCustomers(customersDataBase.customers)
-//     saveDataToStorage('customersData', customersDataBase.customers)
+customerForm.addEventListener('submit', e => {
+      e.preventDefault()
 
-//     inputs.forEach(input => input.value = '')
-// })
+      // console.log('listener')
 
-function addCustomer(){
-    const name = customerInputName.value
-    const username = `@${customerInputUsername.value}`
-    const phone = customerInputPhone.value
-    const street = customerInputStreet.value
-    const city = customerInputCity.value
-    const province = customerInputProvince.value
-    
-    const newCustomer = {id: generateRandomId(),name: name, username: username, phone: phone, address: {street: street, city: city, province: province}}
-    customersDataBase.addCustomer(new Customer(newCustomer))
+      addCustomer(customersDataBase)
+      renderCustomers(customersDataBase.customers)
+      saveDataToStorage('customersData', customersDataBase.customers)
+  })
+
+function validateCustomerData(id){
+  let isValid = true; // Variable para rastrear si el formulario es válido
+  const newCustomerData = {};
+  
+  // Obtener y validar los datos del formulario
+  newCustomerData.name = getValidatedInputFromForm(`name-${id}`, /^[A-Za-z]+$/, 'Nombre inválido. Intente nuevamente con solo letras.');
+  newCustomerData.username = getValidatedInputFromForm(`username-${id}`, /^@.+$/, 'Nombre de usuario inválido. Debe comenzar con "@". Intente nuevamente.');
+  newCustomerData.phone = getValidatedInputFromForm(`phone-${id}`, /^\d{10}$/, 'Número de teléfono inválido. Debe contener 10 dígitos. Intente nuevamente.');
+
+  newCustomerData.address = {
+    street: getValidatedInputFromForm(`street-${id}`, /[A-Za-z0-9\s]{8,}.+/, 'La calle no puede estar vacía. Intente nuevamente.'),
+    city: getValidatedInputFromForm(`city-${id}`, /[A-Za-z]{3,}.+/, 'La ciudad no puede estar vacía. Intente nuevamente.'),
+    province: getValidatedInputFromForm(`province-${id}`, /[A-Za-z]{3,}.+/, 'La provincia no puede estar vacía. Intente nuevamente.')
+  };
+
+  for (const field in newCustomerData) {
+    if (newCustomerData[field] === null || 
+        (typeof newCustomerData[field] === 'object' && Object.values(newCustomerData[field]).includes(null))) {
+      isValid = false;
+      break; // Salir del bucle si se encuentra un campo inválido
+    }
+  }
+  
+  return isValid ? newCustomerData : isValid
 }
+
+function addCustomer(customersDataBase) {
+  console.log('a')
+
+  const newCustomerData = validateCustomerData('newCustomer')
+  
+  // Verificar si todos los campos son válidos antes de agregar el cliente
+  if (newCustomerData) { 
+    newCustomerData.id = generateRandomId()
+    customersDataBase.addCustomer(new Customer(newCustomerData));
+    alert('Cliente agregado exitosamente.');
+    customerForm.reset();
+    submitBtn.classList.remove("add")
+    submitBtn.disabled = true;
+  }
+}
+
+function getValidatedInputFromForm(inputId, validationRegex, errorMessage) {
+  const input = document.getElementById(inputId);
+  const value = input.value.trim();
+
+  console.log(`${input.id} : ${value}`)
+
+  if (validationRegex.test(value)) {
+    // input.setCustomValidity(''); // Limpia el mensaje de error si es válido
+    input.classList.remove("input-error")
+    return value;
+  } else {
+    alert(errorMessage); // Establece el mensaje de error
+    // input.reportValidity(); // Muestra el mensaje de error en el input
+    input.classList.add("input-error")
+    return null;
+  }
+}
+
+function handleSubmitButtonStyle(form){
+  const requiredInputs = form.querySelectorAll("input[required]");
+  const isInputFull = Array.from(requiredInputs).every(field => {
+    return field.value.trim() !== "";
+  });
+
+  // Agregar o quitar la clase según la validación
+  if (isInputFull) {
+    submitBtn.classList.add("add");
+    submitBtn.disabled = false;
+  } else {
+    console.log('a')
+    submitBtn.classList.remove("add");
+    submitBtn.disabled = true;
+  }
+
+}
+
+customerForm.addEventListener("input", () => {
+  // Verificar si todos los campos requeridos están llenos
+  handleSubmitButtonStyle(customerForm);
+});
+
+//   function addCustomer(){
+//     const name = customerInputName.value
+//     const username = `@${customerInputUsername.value}`
+//     const phone = customerInputPhone.value
+//     const street = customerInputStreet.value
+//     const city = customerInputCity.value
+//     const province = customerInputProvince.value
+    
+//     const newCustomer = {id: generateRandomId(),name: name, username: username, phone: phone, address: {street: street, city: city, province: province}}
+//     customersDataBase.addCustomer(new Customer(newCustomer))
+// }
 
 function renderCustomers(customersArr){
     customersContainer.innerHTML = ''
     
     customersArr.forEach(customer => {
-        const {id, name ,username, phone, address, purchases, points} = customer
-        
-        
-        if(!customer.isEditing){
-            
-            const customerDiv = document.createElement('div')
-            customerDiv.id = id
+      const {id, name ,username, phone, address, purchases, points} = customer
+      
+      const customerDiv = document.createElement('div')
+      customerDiv.id = id
+      customerDiv.classList.add('customer--container')
 
-            customerDiv.innerHTML += `
-                <div class="customer--container">
+      const customerHtml = `
+        <div class="customer--div1">
+          <div class="customer--img-container">
+            <img src="./assets/customer-img.svg" alt="">
+          </div>
+          <div class="customer-info--container1">
+            <div class="customer-info">
+              <div class="customer-info-col1">
+                <p>Nombre</p>
+                <p>Usuario</p>
+                <p>Teléfono</p>
+                <p>Calle</p>
+                <p>Ciudad</p>
+                <p>Provincia</p>
+              </div>
+
+              <div class="customer-info-col2">
+                <p>${name}</p>
+                <p>${username}</p>
+                <p>${phone}</p>
+                <p>${address.street}</p>
+                <p>${address.city}</p>
+                <p>${address.province}</p>
+              </div>
+            </div>
+          </div>
+          <div class="customer--action">
+            <button class="customer--action-btn edit" data-parentid="${id}"><i class="fa-solid fa-user-pen"></i> Editar</button>
+            <button class="customer--action-btn remove" data-parentid="${id}"><i class="fa-solid fa-x"></i> Eliminar</button>
+          </div>
+
+        </div>
+        <div class="customer--div2">
+          <div class="customer-info--container2">
+            <div class="customer-info">
+              <div class="customer-info2-col1">
+                <p>Compras</p>
+                <p>Puntos</p>
+              </div>
+
+              <div class="customer-info2-col2">
+                <p>${purchases}</p>
+                <p>${points}</p>
+              </div>
+            </div>
+          </div>
+        </div>`
+
+      const customerEditingHtml =`
             <div class="customer--div1">
               <div class="customer--img-container">
                 <img src="./assets/customer-img.svg" alt="">
               </div>
               <div class="customer-info--container1">
-                <div class="customer-info">
+                <div class="customer-info-editing">
                   <div class="customer-info-col1">
-                    <p>Nombre</p>
-                    <p>Usuario</p>
-                    <p>Teléfono</p>
-                    <p>Calle</p>
-                    <p>Ciudad</p>
-                    <p>Provincia</p>
+                    <label for="name-${id}">Nombre</label>
+                    <label for="username-${id}">Usuario</label>
+                    <label for="phone-${id}">Teléfono</label>
+                    <label for="street-${id}">Calle</label>
+                    <label for="city-${id}">Ciudad</label>
+                    <label for="province-${id}">Provincia</label>
                   </div>
 
                   <div class="customer-info-col2">
-                    <p>${name}</p>
-                    <p>${username}</p>
-                    <p>${phone}</p>
-                    <p>${address.street}</p>
-                    <p>${address.city}</p>
-                    <p>${address.province}</p>
+                    <input id="name-${id}" class="customer--input" type="text" placeholder="Nombre" value="${name}" required>
+                    <input id="username-${id}" class="customer--input" type="text" placeholder="Usuario" value="${username}" required>
+                    <input id="phone-${id}" class="customer--input" type="number" placeholder="Teléfono" value="${phone}" required>
+                    <input id="street-${id}" class="customer--input" type="text" placeholder="Calle" value="${address.street}" required>
+                    <input id="city-${id}" class="customer--input" type="text" placeholder="Ciudad" value="${address.city}" required>
+                    <input id="province-${id}" class="customer--input" type="text" placeholder="Provincia" value="${address.province}" required>
                   </div>
                 </div>
               </div>
               <div class="customer--action">
-                <button class="customer--action-btn remove"><i class="fa-solid fa-x"></i> Eliminar</button>
-                <button class="customer--action-btn edit"><i class="fa-solid fa-user-pen"></i> Editar</button>
+                <button class="customer--action-btn remove" data-parentid="${id}"><i class="fa-solid fa-x"></i>
+                  Eliminar</button>
               </div>
 
             </div>
             <div class="customer--div2">
               <div class="customer-info--container2">
-                <div class="customer-info">
+                <div class="customer-info-editing">
                   <div class="customer-info2-col1">
-                    <p>Compras</p>
-                    <p>Puntos</p>
+                    <label for="purchases-${id}">Compras</label>
+                    <label for="points-${id}">Puntos</label>
                   </div>
 
                   <div class="customer-info2-col2">
-                    <p>${purchases}</p>
-                    <p>${points}</p>
+                    <input id="purchases-${id}" class="customer--input" type="number" placeholder="Compras" value=${purchases} required>
+                    <input id="points-${id}" class="customer--input" type="number" placeholder="Puntos" value=${points} required>
                   </div>
                 </div>
+                <div>
+                  <button class="customer-editing--action-btn edit" data-parentid="${id}">Salir</button>
+                  <button class="submit--btn add" type="submit" data-parentid="${id}">Guardar</button>
+                </div>
               </div>
-            </div>
-          </div>
-            `
-
-            customersContainer.appendChild(customerDiv)
-        }else{
-
-            const customerForm = document.createElement('form')
-            customerForm.id = id
-
-            customerForm.innerHTML += `
-            <p><strong>Nombre</strong>: <input type="text" class="input-${id}" value="${name}" id="name-${id}" name="name" placeholder="Nombre" required pattern="^[A-Za-z\sñ]+$" title="Nombre inválido. Intente nuevamente con solo letras y espacios."></p>
-            <p><strong>Usuario</strong>: <input type="text" class="input-${id}" value="${username}" id="username-${id}" name="username" placeholder="Usuario" required></p>
-            <p><strong>Teléfono</strong>: <input type="number" class="input-${id}" value="${phone}" id="phone-${id}" name="phone" placeholder="Teléfono" min="1000000000" max="9999999999" pattern="[0-9]{10}" title="La calle solo puede contener letras y números. Intente nuevamente." required></p>
-            <p><strong>Calle</strong>: <input type="text" class="input-${id}" value="${address.street}" id="street-${id}" name="street" placeholder="Calle" required pattern="^[A-Za-z0-9\s]+$" title="La calle solo puede contener letras y números. Intente nuevamente."></p>
-            <p><strong>Ciudad</strong>: <input type="text" class="input-${id}" value="${address.city}" id="city-${id}" name="city" placeholder="Ciudad" required pattern="^[A-Za-z\s]+$" title="La ciudad solo puede contener letras. Intente nuevamente.">
-            <p><strong>Provincia</strong>: <input type="text" class="input-${id}" value="${address.province}" id="province-${id}" name="province" placeholder="Provincia" required pattern="^[A-Za-z\s]+$" title="La provincia solo puede contener letras. Intente nuevamente."></p>          </p>
-            <p><strong>Compras</strong>: <input type="number" class="input-${id}" value="${purchases}" name="" id="purchases-${id}"></p>
-            <p><strong>Puntos</strong>: <input type="number" class="input-${id}" value="${points}" name="" id="points-${id}"></p>
-            <button>Guardar</button>
-            <button>Eliminar</button>
-            <button>Cancelar</button>
-            `
-
-            customersContainer.appendChild(customerForm)
-        }
+            </div>`
+        
+        customerDiv.innerHTML = customer.isEditing ? customerEditingHtml : customerHtml
+        customersContainer.appendChild(customerDiv)
     })
 }
 
+//Filter
+
 const filterInput = document.querySelector('#filter')
+const filterContainer = document.querySelector('#search-customer')
+
+filterContainer.addEventListener('click', (e) => {
+    filterInput.focus()
+})
+
+filterInput.addEventListener("focus", () => {
+  filterContainer.classList.add("focus");
+});
+
+filterInput.addEventListener("blur", () => {
+  filterContainer.classList.remove("focus");
+});
 
 filterInput.addEventListener('input', () => {
     const searchTerm = filterInput.value.toLowerCase()
     const filteredCustomers = customersDataBase.customers.filter(customer => {
         return customer.name.toLowerCase().includes(searchTerm) ||
-               customer.username.toLowerCase().includes(searchTerm) ||
-               customer.phone.toString().includes(searchTerm) ||
-               customer.address.street.toLowerCase().includes(searchTerm) ||
-               customer.address.city.toLowerCase().includes(searchTerm) ||
-               customer.address.province.toLowerCase().includes(searchTerm) ||
-               customer.purchases.toString().includes(searchTerm) ||
-               customer.points.toString().includes(searchTerm);
+                customer.username.toLowerCase().includes(searchTerm) ||
+                customer.phone.toString().includes(searchTerm) ||
+                customer.address.street.toLowerCase().includes(searchTerm) ||
+                customer.address.city.toLowerCase().includes(searchTerm) ||
+                customer.address.province.toLowerCase().includes(searchTerm) ||
+                customer.purchases.toString().includes(searchTerm) ||
+                customer.points.toString().includes(searchTerm);
     })
     renderCustomers(filteredCustomers)
 })
 
-// customersContainer.addEventListener('click', e => {
-//     if(e.target.tagName === 'BUTTON'){
-//         const id = e.target.parentNode.id  
+customersContainer.addEventListener('click', e => {
+  if(e.target.dataset.parentid){
+        const id = e.target.dataset.parentid  
+
+        console.log(e.target.textContent)
         
-//         if(e.target.textContent === 'Cancelar' || e.target.textContent === 'Editar'){
-//             customersDataBase.customers.forEach(customer => {
-//                 if(customer.id === id){
-//                     customer.toggleIsEditing()
-//                 }
-//             })
-//         }
+        if(e.target.textContent.trim() === 'Salir' || e.target.textContent.trim() === 'Editar'){
+            customersDataBase.customers.forEach(customer => {
+                if(customer.id === id){
+                    customer.toggleIsEditing()
+                }
+            })
+        }
         
-//         if(e.target.textContent === 'Eliminar'){
-//             customersDataBase.customers.forEach((customer, i) => {
-//                 if(customer.id === id){
-//                     customersDataBase.customers.splice(i,1)
-//                 }
-//             })
-//         }
+        if(e.target.textContent.trim() === 'Eliminar'){
+            customersDataBase.customers.forEach((customer, i) => {
+                if(customer.id === id){
+                    customersDataBase.customers.splice(i,1)
+                }
+            })
+        }
 
-//         if(e.target.textContent === 'Guardar'){
-//             const name = document.querySelector(`#name-${id}`).value
-//             // const username = document.querySelector(`#username-${id}`)
-//             // const phone = document.querySelector(`#phone-${id}`)
-//             // const street = document.querySelector(`#street-${id}`)
-//             // const city = document.querySelector(`#city-${id}`)
-//             // const province = document.querySelector(`#province-${id}`)
+        if(e.target.textContent === 'Guardar'){
+            const name = document.querySelector(`#name-${id}`).value
+            // const username = document.querySelector(`#username-${id}`)
+            // const phone = document.querySelector(`#phone-${id}`)
+            // const street = document.querySelector(`#street-${id}`)
+            // const city = document.querySelector(`#city-${id}`)
+            // const province = document.querySelector(`#province-${id}`)
 
-//             customersDataBase.customers.forEach((customer) => {
-//                 if(customer.id === id){
-//                     customer.name = name
-//                     customer.toggleIsEditing()
-//                 }
-//             })
+            customersDataBase.customers.forEach((customer) => {
+                if(customer.id === id){
+                    customer.name = name
+                    // customer.toggleIsEditing()
+                }
+            })
+          }
 
 
-//         }
-
-//         renderCustomers(customersDataBase.customers)
-//         saveDataToStorage('customersData', customersDataBase.customers)
-//     }
-// })
+        renderCustomers(customersDataBase.customers)
+        saveDataToStorage('customersData', customersDataBase.customers)
+    }
+})
 
 renderCustomers(customersDataBase.customers)

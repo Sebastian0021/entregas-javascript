@@ -18,22 +18,23 @@
   <main class="main">
     <div class="container">
       <div class="form--container">
-        <form class="form" action="">
-          <input class="form--input" type="text" placeholder="Nombre" required>
-          <input class="form--input" type="text" placeholder="Usuario" required>
-          <input class="form--input" type="number" placeholder="Teléfono" required>
-          <input class="form--input" type="text" placeholder="Calle" required>
-          <input class="form--input" type="text" placeholder="Ciudad" required>
-          <input class="form--input" type="text" placeholder="Provincia" required>
-          <button class="form--btn"><i class="fa-solid fa-plus"></i> Agregar</button>
+        <form id="customer-form" class="form" action="#">
+          <input id="name-newCustomer" class="form--input" type="text" placeholder="Nombre" required>
+          <input id="username-newCustomer" class="form--input" type="text" placeholder="Usuario" required>
+          <input id="phone-newCustomer" class="form--input" type="number" placeholder="Teléfono" required>
+          <input id="street-newCustomer" class="form--input" type="text" placeholder="Calle" required>
+          <input id="city-newCustomer" class="form--input" type="text" placeholder="Ciudad" required>
+          <input id="province-newCustomer" class="form--input" type="text" placeholder="Provincia" required>
+          <button id="btn-customer-form" class="form--btn" disabled><i class="fa-solid fa-plus"></i> Agregar</button>
         </form>
       </div>
       <div class="customers-ui">
-        <div class="search-customer">
+        <div id="search-customer" class="search-customer">
           <i class="fa-solid fa-magnifying-glass"></i>
           <input id="filter" class="search-customer--input" type="text" placeholder="Buscar cliente">
         </div>
         <div class="customers--container" id="customers-container">
+
         </div>
       </div>
     </div>
