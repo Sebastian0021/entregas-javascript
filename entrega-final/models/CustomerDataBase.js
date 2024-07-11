@@ -22,4 +22,15 @@ export class CustomerDataBase {
     getCustomerById(id) {
         return this.customers.find(customer => customer.id == id);
     }
+
+    removeCustomerById(id) {
+        this.customers = this.customers.filter(customer => customer.id !== id);
+    }
+
+    updateCustomer(id, updatedCustomer) {
+        const customer = this.getCustomerById(id);
+        if (customer) {
+            Object.assign(customer, updatedCustomer);
+        }
+    }
 }

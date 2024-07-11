@@ -15,9 +15,7 @@ const customersDataBase = new CustomerDataBase();
 const customersDataStorage = getDataFromStorage('customersData')
 
 if(customersDataStorage){
-    // console.log(customersDataStorage)
     customersDataBase.addCustomersFromCustomersData(customersDataStorage);
-
 }else{
     customersDataBase.addCustomersFromCustomersData(customersData);
 }
@@ -31,14 +29,6 @@ const generateRandomId = () => {
 };
 
 //Form
-
-// const customerInputName = document.querySelector('#name')
-// const customerInputUsername = document.querySelector('#username')
-// const customerInputPhone = document.querySelector('#phone')
-// const customerInputStreet = document.querySelector('#street')
-// const customerInputCity = document.querySelector('#city')
-// const customerInputProvince = document.querySelector('#province')
-// const inputs = document.querySelectorAll('.form-customer--input')
 
 const customerForm = document.querySelector('#customer-form')
 const submitBtn = document.getElementById("btn-customer-form");
@@ -58,15 +48,23 @@ function validateCustomerData(id){
   const newCustomerData = {};
   
   // Obtener y validar los datos del formulario
-  newCustomerData.name = getValidatedInputFromForm(`name-${id}`, /^[A-Za-z]+$/, 'Nombre inválido. Intente nuevamente con solo letras.');
-  newCustomerData.username = getValidatedInputFromForm(`username-${id}`, /^@.+$/, 'Nombre de usuario inválido. Debe comenzar con "@". Intente nuevamente.');
+  newCustomerData.name = getValidatedInputFromForm(`name-${id}`, /[A-Za-z]{2,}.+/, 'Nombre inválido. Intente nuevamente con solo letras.');
+  
+  const usernameValidation = getValidatedInputFromForm(`username-${id}`, /^[A-Za-z0-9]+$/, 'Nombre de usuario inválido. Intente nuevamente.')
+  newCustomerData.username = usernameValidation ? `@${usernameValidation}` : null;
+  
   newCustomerData.phone = getValidatedInputFromForm(`phone-${id}`, /^\d{10}$/, 'Número de teléfono inválido. Debe contener 10 dígitos. Intente nuevamente.');
 
   newCustomerData.address = {
-    street: getValidatedInputFromForm(`street-${id}`, /[A-Za-z0-9\s]{8,}.+/, 'La calle no puede estar vacía. Intente nuevamente.'),
-    city: getValidatedInputFromForm(`city-${id}`, /[A-Za-z]{3,}.+/, 'La ciudad no puede estar vacía. Intente nuevamente.'),
-    province: getValidatedInputFromForm(`province-${id}`, /[A-Za-z]{3,}.+/, 'La provincia no puede estar vacía. Intente nuevamente.')
+    street: getValidatedInputFromForm(`street-${id}`, /[A-Za-z0-9\s]{5,}.+/, 'La calle no es válida. Intente nuevamente.'),
+    city: getValidatedInputFromForm(`city-${id}`, /[A-Za-z]{3,}.+/, 'La ciudad no es válida. Intente nuevamente.'),
+    province: getValidatedInputFromForm(`province-${id}`, /[A-Za-z]{3,}.+/, 'La provincia no es válida. Intente nuevamente.')
   };
+
+  if(customersDataBase.getCustomerById(id)){
+    newCustomerData.purchases = getValidatedInputFromForm(`purchases-${id}`, /^[0-9]\d*$/, 'Número válido.');
+    newCustomerData.points = getValidatedInputFromForm(`points-${id}`, /^[0-9]\d*$/, 'Número válido.');
+  }
 
   for (const field in newCustomerData) {
     if (newCustomerData[field] === null || 
@@ -88,7 +86,14 @@ function addCustomer(customersDataBase) {
   if (newCustomerData) { 
     newCustomerData.id = generateRandomId()
     customersDataBase.addCustomer(new Customer(newCustomerData));
-    alert('Cliente agregado exitosamente.');
+    swal({
+      // title: "Cliente agregado exitosamente.",
+      text: "Cliente agregado exitosamente.",
+      icon: "success",
+      button: "Salir",
+    });
+    // alert('Cliente agregado exitosamente.');
+    swal("Bien hecho!", "Cliente agregado exitosamente!", "success");
     customerForm.reset();
     submitBtn.classList.remove("add")
     submitBtn.disabled = true;
@@ -99,16 +104,15 @@ function getValidatedInputFromForm(inputId, validationRegex, errorMessage) {
   const input = document.getElementById(inputId);
   const value = input.value.trim();
 
-  console.log(`${input.id} : ${value}`)
+  console.log
 
   if (validationRegex.test(value)) {
-    // input.setCustomValidity(''); // Limpia el mensaje de error si es válido
     input.classList.remove("input-error")
     return value;
   } else {
-    alert(errorMessage); // Establece el mensaje de error
-    // input.reportValidity(); // Muestra el mensaje de error en el input
+    swal("Error al agregar un cliente", `${errorMessage}`, "error");
     input.classList.add("input-error")
+    console.log(input.classList)
     return null;
   }
 }
@@ -135,18 +139,6 @@ customerForm.addEventListener("input", () => {
   // Verificar si todos los campos requeridos están llenos
   handleSubmitButtonStyle(customerForm);
 });
-
-//   function addCustomer(){
-//     const name = customerInputName.value
-//     const username = `@${customerInputUsername.value}`
-//     const phone = customerInputPhone.value
-//     const street = customerInputStreet.value
-//     const city = customerInputCity.value
-//     const province = customerInputProvince.value
-    
-//     const newCustomer = {id: generateRandomId(),name: name, username: username, phone: phone, address: {street: street, city: city, province: province}}
-//     customersDataBase.addCustomer(new Customer(newCustomer))
-// }
 
 function renderCustomers(customersArr){
     customersContainer.innerHTML = ''
@@ -224,7 +216,7 @@ function renderCustomers(customersArr){
 
                   <div class="customer-info-col2">
                     <input id="name-${id}" class="customer--input" type="text" placeholder="Nombre" value="${name}" required>
-                    <input id="username-${id}" class="customer--input" type="text" placeholder="Usuario" value="${username}" required>
+                    <input id="username-${id}" class="customer--input" type="text" placeholder="Usuario" value="${username.substring(1)}" required>
                     <input id="phone-${id}" class="customer--input" type="number" placeholder="Teléfono" value="${phone}" required>
                     <input id="street-${id}" class="customer--input" type="text" placeholder="Calle" value="${address.street}" required>
                     <input id="city-${id}" class="customer--input" type="text" placeholder="Ciudad" value="${address.city}" required>
@@ -268,7 +260,7 @@ function renderCustomers(customersArr){
 const filterInput = document.querySelector('#filter')
 const filterContainer = document.querySelector('#search-customer')
 
-filterContainer.addEventListener('click', (e) => {
+filterContainer.addEventListener('click', () => {
     filterInput.focus()
 })
 
@@ -307,35 +299,51 @@ customersContainer.addEventListener('click', e => {
                     customer.toggleIsEditing()
                 }
             })
+            renderCustomers(customersDataBase.customers)
+            saveDataToStorage('customersData', customersDataBase.customers)
+
         }
         
         if(e.target.textContent.trim() === 'Eliminar'){
-            customersDataBase.customers.forEach((customer, i) => {
-                if(customer.id === id){
-                    customersDataBase.customers.splice(i,1)
-                }
-            })
+
+          swal({
+            title: "¿Seguro que quieres eliminar el cliente?",
+            text: "Una vez eliminado no se podrá recuperar la información del mismo!",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+          })
+          .then((willDelete) => {
+            if (willDelete) {
+              customersDataBase.removeCustomerById(id)
+
+              renderCustomers(customersDataBase.customers)
+              saveDataToStorage('customersData', customersDataBase.customers)
+
+              swal("El cliente ha sido eliminado correctamente!", {
+                icon: "success",
+              });
+
+
+            } else {
+              swal("El cliente no se ha eliminado!");
+            }
+          });
         }
 
         if(e.target.textContent === 'Guardar'){
-            const name = document.querySelector(`#name-${id}`).value
-            // const username = document.querySelector(`#username-${id}`)
-            // const phone = document.querySelector(`#phone-${id}`)
-            // const street = document.querySelector(`#street-${id}`)
-            // const city = document.querySelector(`#city-${id}`)
-            // const province = document.querySelector(`#province-${id}`)
+          
+          const customerValidation  = validateCustomerData(id)
 
-            customersDataBase.customers.forEach((customer) => {
-                if(customer.id === id){
-                    customer.name = name
-                    // customer.toggleIsEditing()
-                }
-            })
+          if(customerValidation){
+            customersDataBase.updateCustomer(id, customerValidation)
+            saveDataToStorage('customersData', customersDataBase.customers)
+            renderCustomers(customersDataBase.customers)
+            swal("Se han guardado los cambios correctamente!", {
+              icon: "success",
+            });            
           }
-
-
-        renderCustomers(customersDataBase.customers)
-        saveDataToStorage('customersData', customersDataBase.customers)
+        }
     }
 })
 
