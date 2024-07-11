@@ -1,44 +1,19 @@
-import { customersData } from './data/customerData.js';
 import { CustomerDataBase } from './models/CustomerDataBase.js';
 import { Customer } from './models/Customer.js';
 
 // Inicializar la base de datos de clientes
 const saveDataToStorage = (key, value) => {
-    localStorage.setItem(key, JSON.stringify(value));
+  localStorage.setItem(key, JSON.stringify(value));
 };
-  
+
 const getDataFromStorage = (key) => {
-    return JSON.parse(localStorage.getItem(key));
+  return JSON.parse(localStorage.getItem(key));
 };
-
-fetch("/data.json")
-  .then((response) => response.json())
-  .then((data) => {
-    console.log(data);
-    console.log('hola')
-  });
-
-
-// async function initDataBase(customersDataBase){
-//   const res = await fetch('./data')
-//   const data = await res.json()
-
-//   console.log(data)
-  
-//   // const customersDataStorage = await getDataFromStorage('customersData')
-
-//   // if(customersDataStorage){
-//   //   customersDataBase.addCustomersFromCustomersData(customersDataStorage);
-//   // }else{
-//   //   customersDataBase.addCustomersFromCustomersData(data);
-//   // }
-
-//   // renderCustomers(customersDataBase.customers)
-// }
 
 const customersDataBase = new CustomerDataBase();
 
-initDataBase(customersDataBase)
+customersDataBase.initDataBase('./data/customerData.json', getDataFromStorage('customersData'))
+  .then(() => renderCustomers(customersDataBase.customers))
 
 const customersContainer = document.querySelector('#customers-container')
 

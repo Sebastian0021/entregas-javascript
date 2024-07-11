@@ -6,6 +6,17 @@ export class CustomerDataBase {
         this.customers = []; // Lista de clientes
     }
     
+    async initDataBase(path, customersDataStorage){
+        const res = await fetch(path)
+        const data = await res.json()
+      
+        if(customersDataStorage){
+          this.addCustomersFromCustomersData(customersDataStorage);
+        }else{
+          this.addCustomersFromCustomersData(data);
+        }
+      }
+
     // Método para agregar un cliente individual a la base de datos
     addCustomer(customer) {
         this.customers.push(customer);
