@@ -11,18 +11,36 @@ const getDataFromStorage = (key) => {
     return JSON.parse(localStorage.getItem(key));
 };
 
-const customersDataBase = new CustomerDataBase();
-const customersDataStorage = getDataFromStorage('customersData')
+fetch("/data.json")
+  .then((response) => response.json())
+  .then((data) => {
+    console.log(data);
+    console.log('hola')
+  });
 
-if(customersDataStorage){
-    customersDataBase.addCustomersFromCustomersData(customersDataStorage);
-}else{
-    customersDataBase.addCustomersFromCustomersData(customersData);
-}
+
+// async function initDataBase(customersDataBase){
+//   const res = await fetch('./data')
+//   const data = await res.json()
+
+//   console.log(data)
+  
+//   // const customersDataStorage = await getDataFromStorage('customersData')
+
+//   // if(customersDataStorage){
+//   //   customersDataBase.addCustomersFromCustomersData(customersDataStorage);
+//   // }else{
+//   //   customersDataBase.addCustomersFromCustomersData(data);
+//   // }
+
+//   // renderCustomers(customersDataBase.customers)
+// }
+
+const customersDataBase = new CustomerDataBase();
+
+initDataBase(customersDataBase)
 
 const customersContainer = document.querySelector('#customers-container')
-
-
 
 const generateRandomId = () => {
     return Math.floor(Math.random() * Date.now()).toString(16)
@@ -136,7 +154,6 @@ function handleSubmitButtonStyle(form){
 }
 
 customerForm.addEventListener("input", () => {
-  // Verificar si todos los campos requeridos están llenos
   handleSubmitButtonStyle(customerForm);
 });
 
@@ -287,6 +304,8 @@ filterInput.addEventListener('input', () => {
     renderCustomers(filteredCustomers)
 })
 
+//customerContainer
+
 customersContainer.addEventListener('click', e => {
   if(e.target.dataset.parentid){
         const id = e.target.dataset.parentid  
@@ -336,6 +355,7 @@ customersContainer.addEventListener('click', e => {
           const customerValidation  = validateCustomerData(id)
 
           if(customerValidation){
+            customerValidation.isEditing = false;
             customersDataBase.updateCustomer(id, customerValidation)
             saveDataToStorage('customersData', customersDataBase.customers)
             renderCustomers(customersDataBase.customers)
@@ -346,5 +366,3 @@ customersContainer.addEventListener('click', e => {
         }
     }
 })
-
-renderCustomers(customersDataBase.customers)
