@@ -19,7 +19,7 @@ export class CustomerDataBase {
 
     // Método para agregar un cliente individual a la base de datos
     addCustomer(customer) {
-        this.customers.push(customer);
+        this.customers.unshift(customer);
     }
     
     // Método para agregar clientes desde un array de datos inicial
